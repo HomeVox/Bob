@@ -213,7 +213,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             if "sound" in call.data and call.data["sound"]:
                 payload["sound"] = call.data["sound"]
 
-            await _publish(hass, f"{prefix}/notify", json.dumps(payload, ensure_ascii=True))
+            payload_json = json.dumps(payload, ensure_ascii=True)
+            await _publish(hass, f"{prefix}/notify", payload_json)
+            # Compatibility fallback for firmware/configs still fixed to bob/cmd.
+            if prefix != "bob/cmd":
+                await _publish(hass, "bob/cmd/notify", payload_json)
 
         async def handle_set_emotion(call: ServiceCall) -> None:
             target_entry = _get_entry(hass, call)

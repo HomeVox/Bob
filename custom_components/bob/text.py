@@ -36,11 +36,21 @@ class BobNotificationText(BobEntity, TextEntity):
             {"text": value, "type": "generic", "duration": 4000, "wake": True},
             ensure_ascii=True,
         )
+        topic = self._runtime.command_topic("notify")
         await mqtt.async_publish(
             self.hass,
-            self._runtime.command_topic("notify"),
+            topic,
             payload,
             qos=0,
             retain=False,
         )
+        # Compatibility fallback for firmware/configs still fixed to bob/cmd.
+        if topic != "bob/cmd/notify":
+            await mqtt.async_publish(
+                self.hass,
+                "bob/cmd/notify",
+                payload,
+                qos=0,
+                retain=False,
+            )
         self.async_write_ha_state()
