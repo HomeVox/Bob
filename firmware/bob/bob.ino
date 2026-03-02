@@ -212,7 +212,7 @@ uint32_t manualOverrideTimeout = 0;
 const uint32_t MANUAL_OVERRIDE_DURATION = 10000;
 
 bool alwaysAwake = false;
-bool autoAwakeOnPower = false; // Automatisch wakker blijven als aan stroom
+bool autoAwakeOnPower = true; // Automatisch wakker blijven als aan stroom
 bool autoEmotionEnabled = true;
 
 static constexpr PersonalityExtended AUTO_EMOTIONS[] = {
@@ -1632,6 +1632,7 @@ void handleWifiSetupSave() {
   wifiPrefs.putUInt("brightness", brightnessVal);
   wifiPrefs.putBool("brightness_user_set", true);
   wifiPrefs.putBool("auto_brightness", autoBrightness);
+  wifiPrefs.putBool("auto_awake_on_power", autoAwakeOnPower);
   wifiPrefs.putBool("ha_enabled", haEnabled);
   if (haUrl.length() > 0) wifiPrefs.putString("ha_url", haUrl);
   if (haToken.length() > 0) wifiPrefs.putString("ha_token", haToken);
@@ -2022,6 +2023,7 @@ void loadRuntimeConnectivityConfig() {
     ? wifiPrefs.getUInt("brightness", DEFAULT_SCREEN_BRIGHTNESS)
     : (uint32_t)DEFAULT_SCREEN_BRIGHTNESS;
   bool savedAutoBrightness = wifiPrefs.getBool("auto_brightness", true);
+  bool savedAutoAwakeOnPower = wifiPrefs.getBool("auto_awake_on_power", true);
 
   wifiPrefs.end();
 
@@ -2041,6 +2043,7 @@ void loadRuntimeConnectivityConfig() {
   if (savedBrightness > 255) savedBrightness = DEFAULT_SCREEN_BRIGHTNESS;
   screenBrightness = (int)savedBrightness;
   autoBrightnessEnabled = savedAutoBrightness;
+  autoAwakeOnPower = savedAutoAwakeOnPower;
 }
 
 bool initializeWiFi() {
@@ -2447,6 +2450,7 @@ void loop(){
       wifiPrefs.putString("mqtt_pass", blePendingMqttPass);
       if (blePendingMqttClientId.length() > 0) wifiPrefs.putString("mqtt_cid", blePendingMqttClientId);
       wifiPrefs.putBool("mqtt_enabled", mqttEnabledOpt);
+      wifiPrefs.putBool("auto_awake_on_power", autoAwakeOnPower);
       wifiPrefs.end();
       if (bleProvStatusChar) {
         bleProvStatusChar->setValue("SAVED");

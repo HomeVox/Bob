@@ -295,6 +295,9 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
       autoAwakeOnPower = false;
       Serial.println("Auto Awake On Power DISABLED");
     }
+    wifiPrefs.begin("wifi", false);
+    wifiPrefs.putBool("auto_awake_on_power", autoAwakeOnPower);
+    wifiPrefs.end();
     publishStatus("online"); // Confirm and update status
 
   } else if (strcmp(topic, "bob/cmd/test") == 0) {
