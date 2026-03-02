@@ -1,6 +1,22 @@
-﻿# Bob Firmware (M5CoreS3)
+# Bob Firmware (M5CoreS3)
 
 Main firmware for Bob.
+
+## Arduino Flash
+- Board package URL: `https://static-cdn.m5stack.com/resource/arduino/package_m5stack_index.json`
+- Board package: `M5Stack`
+- Board selection: `M5Stack-CoreS3`
+- Required libraries:
+  - `M5Unified`
+  - `M5GFX`
+  - `PubSubClient`
+  - `ArduinoJson`
+
+Open `bob.ino`, select the correct COM port, and upload.
+
+## Hardware Note
+- Supported: `M5Stack CoreS3 Lite / CoreS3`
+- Not supported for this firmware: `M5AtomS3`
 
 ## Important
 - Use `config.example.h` as a template.

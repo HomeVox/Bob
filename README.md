@@ -85,7 +85,25 @@ Firmware source:
 
 - `firmware/bob`
 
-Build and flash with your preferred Arduino/PlatformIO workflow.
+Arduino IDE quick setup:
+
+1. Install Arduino IDE 2.x.
+2. Add board manager URL:
+   - `https://static-cdn.m5stack.com/resource/arduino/package_m5stack_index.json`
+3. Install board package:
+   - `M5Stack` by M5Stack
+4. Select board:
+   - `M5Stack-CoreS3`
+5. Install required libraries (Library Manager):
+   - `M5Unified`
+   - `M5GFX`
+   - `PubSubClient`
+   - `ArduinoJson`
+6. Open `firmware/bob/bob.ino`, select the correct COM port, then Upload.
+
+Important:
+- This firmware targets **M5Stack CoreS3 Lite / CoreS3**.
+- **Do not select M5AtomS3** for this project.
 
 ### 3. Configure via Home Assistant (BLE)
 
