@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import asyncio
 import json
 from typing import Any
 
@@ -15,6 +14,7 @@ from homeassistant.exceptions import HomeAssistantError
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers import device_registry as dr
 
+from .ble_provision import async_provision_over_ble
 from .const import (
     ACTIONS,
     CONF_COMMAND_PREFIX,
@@ -79,81 +79,6 @@ PROVISION_BLE_SCHEMA = vol.Schema(
         vol.Optional("timeout", default=20): vol.All(vol.Coerce(int), vol.Range(min=5, max=90)),
     }
 )
-
-
-BLE_PROV_SERVICE_UUID = "7a6b0001-10f6-4a6a-b4a0-3f1c2d9e1000"
-BLE_PROV_SSID_UUID = "7a6b0002-10f6-4a6a-b4a0-3f1c2d9e1000"
-BLE_PROV_PASS_UUID = "7a6b0003-10f6-4a6a-b4a0-3f1c2d9e1000"
-BLE_PROV_APPLY_UUID = "7a6b0004-10f6-4a6a-b4a0-3f1c2d9e1000"
-BLE_PROV_STATUS_UUID = "7a6b0005-10f6-4a6a-b4a0-3f1c2d9e1000"
-BLE_PROV_MQTT_HOST_UUID = "7a6b0006-10f6-4a6a-b4a0-3f1c2d9e1000"
-BLE_PROV_MQTT_PORT_UUID = "7a6b0007-10f6-4a6a-b4a0-3f1c2d9e1000"
-BLE_PROV_MQTT_USER_UUID = "7a6b0008-10f6-4a6a-b4a0-3f1c2d9e1000"
-BLE_PROV_MQTT_PASS_UUID = "7a6b0009-10f6-4a6a-b4a0-3f1c2d9e1000"
-BLE_PROV_MQTT_CID_UUID = "7a6b000a-10f6-4a6a-b4a0-3f1c2d9e1000"
-BLE_PROV_MQTT_EN_UUID = "7a6b000b-10f6-4a6a-b4a0-3f1c2d9e1000"
-
-
-async def _provision_over_ble(call: ServiceCall) -> None:
-    """Provision Bob WiFi/MQTT credentials over BLE."""
-    try:
-        from bleak import BleakClient, BleakScanner
-    except Exception as err:
-        raise HomeAssistantError(
-            "BLE provisioning requires bleak; ensure Bluetooth support is available in Home Assistant."
-        ) from err
-
-    ssid = call.data["ssid"].strip()
-    password = call.data["password"]
-    mqtt_host = call.data["mqtt_host"].strip()
-    mqtt_port = int(call.data["mqtt_port"])
-    mqtt_user = call.data["mqtt_user"].strip()
-    mqtt_password = call.data["mqtt_password"]
-    mqtt_client_id = call.data["mqtt_client_id"].strip() or "bob"
-    mqtt_enabled = bool(call.data["mqtt_enabled"])
-    ble_name = call.data["ble_name"].strip() or "Bob-Setup-BLE"
-    ble_address = call.data.get("ble_address")
-    timeout = int(call.data["timeout"])
-
-    if len(ssid) == 0 or len(ssid) > 63 or len(password) > 63:
-        raise HomeAssistantError("Invalid WiFi credentials length")
-    if len(mqtt_host) > 80 or len(mqtt_user) > 63 or len(mqtt_password) > 63 or len(mqtt_client_id) > 40:
-        raise HomeAssistantError("Invalid MQTT values length")
-
-    device = None
-    if ble_address:
-        device = await BleakScanner.find_device_by_address(ble_address, timeout=timeout)
-    if device is None:
-        device = await BleakScanner.find_device_by_filter(
-            lambda d, _ad: d.name == ble_name,
-            timeout=timeout,
-        )
-    if device is None:
-        raise HomeAssistantError(f"Could not find Bob over BLE (name '{ble_name}')")
-
-    async with BleakClient(device, timeout=timeout) as client:
-        await client.write_gatt_char(BLE_PROV_SSID_UUID, ssid.encode("utf-8"), response=True)
-        await client.write_gatt_char(BLE_PROV_PASS_UUID, password.encode("utf-8"), response=True)
-        await client.write_gatt_char(BLE_PROV_MQTT_HOST_UUID, mqtt_host.encode("utf-8"), response=True)
-        await client.write_gatt_char(BLE_PROV_MQTT_PORT_UUID, str(mqtt_port).encode("ascii"), response=True)
-        await client.write_gatt_char(BLE_PROV_MQTT_USER_UUID, mqtt_user.encode("utf-8"), response=True)
-        await client.write_gatt_char(BLE_PROV_MQTT_PASS_UUID, mqtt_password.encode("utf-8"), response=True)
-        await client.write_gatt_char(BLE_PROV_MQTT_CID_UUID, mqtt_client_id.encode("utf-8"), response=True)
-        await client.write_gatt_char(BLE_PROV_MQTT_EN_UUID, (b"1" if mqtt_enabled else b"0"), response=True)
-        await client.write_gatt_char(BLE_PROV_APPLY_UUID, b"APPLY", response=True)
-
-        # Firmware updates status to SAVED/ERROR right before restart.
-        try:
-            await asyncio.sleep(0.35)
-            status_raw = await client.read_gatt_char(BLE_PROV_STATUS_UUID)
-            status = status_raw.decode("utf-8", errors="ignore").strip().upper()
-            if status == "ERROR":
-                raise HomeAssistantError("Bob rejected provisioning values")
-        except HomeAssistantError:
-            raise
-        except Exception:
-            # Device can reboot quickly after save, which may interrupt status read.
-            pass
 
 
 def _get_entry(hass: HomeAssistant, call: ServiceCall) -> ConfigEntry:
@@ -291,7 +216,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             await _publish(hass, topic, payload)
 
         async def handle_provision_ble(call: ServiceCall) -> None:
-            await _provision_over_ble(call)
+            await async_provision_over_ble(call.data)
 
         hass.services.async_register(
             DOMAIN, SERVICE_SEND_TEXT, handle_send_text, schema=SEND_TEXT_SCHEMA

@@ -2464,7 +2464,7 @@ void loop(){
     }
   }
 
-  // Keep setup mode lightweight and stable.
+  // Keep setup AP/BLE alive, but continue normal behavior rendering.
   if (wifiSetupPortalActive && WiFi.status() != WL_CONNECTED) {
     // Self-heal AP if it dropped.
     if (WiFi.softAPIP().toString() == "0.0.0.0" && millis() - lastSetupPortalRetry > 5000) {
@@ -2472,9 +2472,6 @@ void loop(){
       Serial.println("Setup AP inactive, retrying start...");
       startWifiSetupPortal();
     }
-    drawSetupPortalScreen();
-    delay(30);
-    return;
   }
 
   // ==================== VOICE STREAMING LOOP ====================

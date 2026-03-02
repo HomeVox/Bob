@@ -3,15 +3,32 @@
     "step": {
       "user": {
         "title": "Bob",
-        "description": "Configureer je Bob MQTT commando-prefix.",
+        "description": "Configureer Bob. Je kunt tijdens setup optioneel WiFi en MQTT via BLE provisionen.",
         "data": {
           "name": "Naam",
-          "command_prefix": "MQTT commando-prefix"
+          "command_prefix": "MQTT commando-prefix",
+          "provision_via_ble": "Nu via BLE provisionen",
+          "ssid": "WiFi SSID",
+          "password": "WiFi wachtwoord",
+          "mqtt_host": "MQTT host",
+          "mqtt_port": "MQTT poort",
+          "mqtt_user": "MQTT gebruikersnaam",
+          "mqtt_password": "MQTT wachtwoord",
+          "mqtt_client_id": "MQTT client-ID",
+          "mqtt_enabled": "MQTT inschakelen",
+          "ble_name": "BLE apparaatnaam",
+          "ble_address": "BLE adres (optioneel)",
+          "timeout": "BLE scan timeout (seconden)"
         }
       }
     },
     "abort": {
       "already_configured": "Deze Bob commando-prefix is al geconfigureerd."
+    },
+    "error": {
+      "ssid_required": "SSID is verplicht wanneer BLE provisioning is ingeschakeld.",
+      "ble_provision_failed": "BLE provisioning mislukt. Controleer of Bob in setup-modus staat en dichtbij is.",
+      "unknown": "Onverwachte fout."
     }
   }
 }
