@@ -119,6 +119,28 @@ void wakeBobFromSleep(const char* reason, bool triggerWakeSequence = true);
 extern String currentBehaviorName;
 extern uint32_t behaviorStartTime;
 
+#if BOB_HAS_QRCODE && defined(ESP_QRCODE_CONFIG_DEFAULT)
+static int g_haQrX0 = 10;
+static int g_haQrY0 = 52;
+static int g_haQrMaxSize = 148;
+
+static void drawHaOnboardingEspQr(esp_qrcode_handle_t qrcode) {
+  const int qrSize = esp_qrcode_get_size(qrcode);
+  int scale = 4;
+  while (scale > 1 && (qrSize * scale) > g_haQrMaxSize) scale--;
+
+  const int drawSize = qrSize * scale;
+  M5.Display.fillRect(g_haQrX0 - 2, g_haQrY0 - 2, drawSize + 4, drawSize + 4, TFT_WHITE);
+  for (int y = 0; y < qrSize; y++) {
+    for (int x = 0; x < qrSize; x++) {
+      if (esp_qrcode_get_module(qrcode, x, y)) {
+        M5.Display.fillRect(g_haQrX0 + x * scale, g_haQrY0 + y * scale, scale, scale, TFT_BLACK);
+      }
+    }
+  }
+}
+#endif
+
 // ---------------- Timings & constanten ----------------
 static const uint32_t FPS_DELAY_MS      = 16;   // ~60 FPS
 static const uint32_t BLINK_MIN_MS      = 2600;
@@ -2208,6 +2230,23 @@ void drawHaOnboardingScreen(const String& localHaUrl) {
     qrPayload = String(BOB_HA_GITHUB_URL);
   }
 
+  const int x0 = 10;
+  const int y0 = 52;
+#if defined(ESP_QRCODE_CONFIG_DEFAULT)
+  g_haQrX0 = x0;
+  g_haQrY0 = y0;
+  g_haQrMaxSize = 148;
+
+  esp_qrcode_config_t cfg = ESP_QRCODE_CONFIG_DEFAULT();
+  cfg.display_func = drawHaOnboardingEspQr;
+  cfg.max_qrcode_version = 5;
+  cfg.qrcode_ecc_level = ESP_QRCODE_ECC_LOW;
+  if (esp_qrcode_generate(&cfg, qrPayload.c_str()) != ESP_OK) {
+    M5.Display.setTextColor(TFT_ORANGE, TFT_BLACK);
+    M5.Display.setCursor(10, 68);
+    M5.Display.println("Failed to generate QR code.");
+  }
+#else
   const uint8_t qrVersion = 5;
   uint8_t qrcodeData[qrcode_getBufferSize(qrVersion)];
   QRCode qrcode;
@@ -2217,8 +2256,6 @@ void drawHaOnboardingScreen(const String& localHaUrl) {
   int scale = 4;
   while (scale > 1 && (qrSize * scale) > 148) scale--;
   const int drawSize = qrSize * scale;
-  const int x0 = 10;
-  const int y0 = 52;
 
   M5.Display.fillRect(x0 - 2, y0 - 2, drawSize + 4, drawSize + 4, TFT_WHITE);
   for (int y = 0; y < qrSize; y++) {
@@ -2228,6 +2265,7 @@ void drawHaOnboardingScreen(const String& localHaUrl) {
       }
     }
   }
+#endif
 #else
   M5.Display.setTextColor(TFT_ORANGE, TFT_BLACK);
   M5.Display.setCursor(10, 68);
