@@ -10,7 +10,7 @@
 BOB (Bad Or Brilliant) transforms your M5Stack CoreS3 into a premium Home Assistant companion with personality.  
 Instead of silent automations hidden in dashboards, BOB gives your smart home a face, a mood, and instant visual feedback.
 
-From alerts to routines, BOB reacts in real time with expressive eyes, emotion-driven behavior, and on-screen messages.
+BOB is fully open source end to end: from 3D-printing your own shell to firmware code and Home Assistant integration.
 
 It’s either bad or brilliant.
 
@@ -23,6 +23,18 @@ BOB combines style and function in one device:
 - Signature modes: screensaver/clock, matrix, snow, celebrate
 - Home Assistant control via HACS + MQTT services
 - Practical sleep/wake behavior tuned for daily use
+
+## Built for Home Assistant
+
+BOB is designed with Home Assistant as the core experience.  
+You can drive notifications, emotions, and behavior directly from automations and scripts, so events are not only logged, but felt in your home.
+
+Use BOB for:
+
+- Visual notifications and message feedback
+- Automation reactions with emotion and movement
+- Daily routines that feel alive and personal
+- Richer interaction than static dashboard cards
 
 ## Why You Should Choose BOB
 
@@ -139,31 +151,23 @@ data:
   enabled: true
 ```
 
-## Supported Modes
+## Modes and Actions, as One Experience
 
-- `matrix`
-- `snow`
-- `cannons`
-- `screensaver`
-- `clock`
-- `tracking`
-- `camera_stream`
-- `auto_emotion`
-- `proximity`
-- `auto_brightness`
+BOB gives you a complete motion-and-mood toolkit out of the box.  
+You can change atmosphere with `matrix`, `snow`, and `cannons`, keep things elegant with `screensaver` or `clock`, and make behavior feel alive using `tracking`, `camera_stream`, `auto_emotion`, `proximity`, and `auto_brightness`.
 
-## Supported Actions
+When it is time to interact, BOB responds instantly with `wake`, `sleep`, `blink`, `follow`, `curious`, `wakeup_sequence`, `celebrate`, `snapshot`, `yes`, and `no`.
 
-- `wake`
-- `sleep`
-- `blink`
-- `follow`
-- `curious`
-- `wakeup_sequence`
-- `celebrate`
-- `snapshot`
-- `yes`
-- `no`
+Together, these modes and actions let you move from practical status feedback to pure personality in one seamless Home Assistant flow.
+
+## What’s Next
+
+The next major upgrades are:
+
+- Native **TTS** for spoken responses
+- Richer **Sound FX** for stronger emotional presence
+
+BOB will not only show what your smart home is doing, but also sound alive.
 
 ## Repository Structure
 
