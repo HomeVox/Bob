@@ -1,4 +1,7 @@
-﻿# BOB (Bad Or Brilliant)
+﻿<p align="center">
+  <img src="https://github.com/HomeVox/housekeeping-addon/blob/main/housekeeping/logo.png?raw=true" alt="HomeVox" width="220" />
+</p>
+# BOB (Bad Or Brilliant)
 
 > BOB (Bad Or Brilliant) turns your M5Stack CoreS3 into a living smart companion with expressive eyes, emotional behavior, on-screen messages, and instant Home Assistant control. Install via HACS in minutes and bring automations to life with personality, motion, and real-time feedback right on Bob's face. It's either bad or brilliant.
 
@@ -118,4 +121,7 @@ Actions:
 ## License
 
 MIT - see `LICENSE`.
+
+
+
 
