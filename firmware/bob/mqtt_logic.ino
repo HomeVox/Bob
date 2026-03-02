@@ -1050,6 +1050,8 @@ void publishStatus(const char* status) {
   // Complete status for Home Assistant entities
   StaticJsonDocument<512> doc;
   doc["status"] = status;
+  doc["wifi"] = WiFi.status() == WL_CONNECTED ? "ON" : "OFF";
+  doc["mqtt"] = mqttClient.connected() ? "ON" : "OFF";
   doc["behavior"] = currentBehaviorName;
   doc["brightness"] = screenBrightness;
   doc["auto_brightness"] = autoBrightnessEnabled ? "ON" : "OFF";

@@ -27,7 +27,7 @@ from .const import (
     SERVICE_SET_MODE,
 )
 
-PLATFORMS = ["sensor"]
+PLATFORMS = ["sensor", "binary_sensor"]
 
 
 SEND_TEXT_SCHEMA = vol.Schema(
