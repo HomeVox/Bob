@@ -5,7 +5,6 @@
 </p>
 
 <h1 align="center">BOB by HomeVox</h1>
-<p align="center"><strong>Made by: <a href="https://homevox.nl" target="_blank" rel="noopener"><img src="docs/images/homevox-wordmark.svg" alt="HomeVox.nl" height="22" /></a></strong></p>
 
 BOB (Bad Or Brilliant) transforms your M5Stack CoreS3 into a premium Home Assistant companion with personality.  
 Instead of silent automations hidden in dashboards, BOB gives your smart home a face, a mood, and instant visual feedback.
@@ -168,6 +167,8 @@ The next major upgrades are:
 - Richer **Sound FX** for stronger emotional presence
 
 BOB will not only show what your smart home is doing, but also sound alive.
+
+www.homevox.nl
 
 ## Repository Structure
 
