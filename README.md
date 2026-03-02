@@ -1,4 +1,4 @@
-<p align="center">
+﻿<p align="center">
   <img src="https://github.com/HomeVox/housekeeping-addon/blob/main/housekeeping/logo.png?raw=true" alt="HomeVox" width="220" />
   &nbsp;&nbsp;&nbsp;
   <img src="https://github.com/HomeVox/Bob/blob/main/docs/images/bob-screen-2.png?raw=true" alt="Bob Screen" width="140" />
@@ -8,36 +8,32 @@
 
 **Made by: HomeVox.nl**
 
-BOB (Bad Or Brilliant) turns your M5Stack CoreS3 into a character-driven Home Assistant companion.  
-It reacts with expressive eyes, behavior-based emotions, and on-screen messages, so your automations feel alive instead of static.
+BOB (Bad Or Brilliant) transforms your M5Stack CoreS3 into a premium Home Assistant companion with personality.  
+Instead of silent automations hidden in dashboards, BOB gives your smart home a face, a mood, and instant visual feedback.
 
-BOB is designed for easy onboarding:
-- Scan the QR shown on Bob's screen
-- Install through HACS
-- Add the integration in Home Assistant
-- Start controlling Bob with simple services and MQTT actions
+From alerts to routines, BOB reacts in real time with expressive eyes, emotion-driven behavior, and on-screen messages.
 
 It’s either bad or brilliant.
 
-## What BOB Does
+## What BOB Brings to Your Home
 
-BOB combines visual personality with practical smart-home feedback:
+BOB combines style and function in one device:
 
-- Emotional eye engine with smooth transitions
-- Text notifications displayed directly on Bob’s screen
-- Screensaver/clock mode in Bob style
-- Matrix mode, snow mode, and celebration effects
-- Sleep/wake behavior tuned for real-world usage
-- Fast Home Assistant control through HACS integration
+- Cinematic eye animations with smooth emotional transitions
+- On-screen text messages for instant notifications
+- Signature modes: screensaver/clock, matrix, snow, celebrate
+- Home Assistant control via HACS + MQTT services
+- Practical sleep/wake behavior tuned for daily use
 
-## Why It’s Different
+## Why People Choose BOB
 
-Most smart-home feedback is hidden in apps and dashboards.  
-BOB gives your automations a physical face in your home:
+Most smart-home setups are powerful but visually boring.  
+BOB turns your automations into something you can actually feel.
 
-- You can *see* states and events instantly
-- You can *trigger* reactions from HA automations/scripts
-- You can *personalize* behavior and mood for your setup
+- See events immediately, no app switching needed
+- Trigger expressive reactions from scripts and automations
+- Personalize behavior to match your home’s vibe
+- Impress guests with a setup that feels truly alive
 
 ## Gallery
 
@@ -68,7 +64,7 @@ Firmware source:
 
 - `firmware/bob`
 
-Build and flash with your preferred Arduino/PlatformIO flow.
+Build and flash with your preferred Arduino/PlatformIO workflow.
 
 ### 3. Configure Firmware
 
@@ -85,12 +81,12 @@ Set at least:
 
 ## First Run Experience
 
-On boot, Bob can show a QR onboarding screen:
+On first boot, BOB can show a QR onboarding screen to accelerate setup:
 
-- QR opens Bob’s local `/ha` onboarding page
-- That page links users straight to this GitHub repo/HACS flow
+- QR opens BOB’s local `/ha` onboarding page
+- That page links users directly to this GitHub + HACS flow
 
-This keeps setup simple for end users before deeper customization.
+Result: less friction, faster installation, better user experience.
 
 ## Home Assistant Services
 
