@@ -1,7 +1,7 @@
 {
   "domain": "bob",
   "name": "Bob",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "documentation": "https://github.com/HomeVox/Bob",
   "issue_tracker": "https://github.com/HomeVox/Bob/issues",
   "dependencies": [
