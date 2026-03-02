@@ -86,6 +86,7 @@ void tickEmotionTween();
 void behaviorsTick(bool anyTouch);
 void handleWifiSetupPage();
 void handleWifiSetupSave();
+void handleSimpleSetupPage();
 void handleDashboard();
 void handleControlAction();
 void handleApiStatus();
@@ -330,6 +331,7 @@ PubSubClient mqttClient(wifiClient);
 WebServer webServer(80);  // HTTP server op poort 80
 Preferences wifiPrefs;
 bool wifiSetupPortalActive = false;
+bool mdnsStarted = false;
 uint32_t lastSetupScreenDraw = 0;
 uint32_t lastSetupPortalRetry = 0;
 
@@ -1686,6 +1688,118 @@ void handleWifiSetupSave() {
   ESP.restart();
 }
 
+void handleSimpleSetupPage() {
+  String html = R"HTML(
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bob Quick Setup</title>
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: #081524;
+      color: #eaf5ff;
+      padding: 16px;
+    }
+    .card {
+      width: min(640px, 96vw);
+      background: #102235;
+      border: 1px solid #28425f;
+      border-radius: 14px;
+      padding: 18px;
+    }
+    h1 { margin: 0 0 8px 0; }
+    p { color: #c6d8eb; margin: 0 0 16px 0; }
+    label { display: block; margin: 10px 0 6px; }
+    input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #355372;
+      background: #0b1a2a;
+      color: #eaf5ff;
+    }
+    .row { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .primary { background: #74d6ff; color: #032133; }
+    .ghost { background: transparent; border: 1px solid #355372; color: #dcecff; text-decoration: none; display: inline-block; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Bob Quick Setup</h1>
+    <p>Simple settings for WiFi + MQTT. Bob saves and reboots automatically.</p>
+    <form method="POST" action="/setup/save">
+      <label for="ssid">WiFi SSID</label>
+      <input id="ssid" name="ssid" maxlength="63" required value=")HTML";
+  wifiPrefs.begin("wifi", true);
+  String fSsid = wifiPrefs.getString("ssid", WIFI_SSID);
+  String fMqttHost = wifiPrefs.getString("mqtt_host", String(MQTT_HOST));
+  String fMqttUser = wifiPrefs.getString("mqtt_user", String(MQTT_USERNAME));
+  String fMqttPass = wifiPrefs.getString("mqtt_pass", String(MQTT_PASSWORD));
+  String fMqttCid = wifiPrefs.getString("mqtt_cid", String(MQTT_CLIENT_ID));
+  bool fMqttEnabled = wifiPrefs.getBool("mqtt_enabled", runtimeMqttEnabled);
+  wifiPrefs.end();
+  html += fSsid;
+  html += R"HTML(">
+
+      <label for="password">WiFi Password</label>
+      <input id="password" name="password" type="password" maxlength="63" placeholder="leave unchanged if same">
+
+      <label for="mqtt_host">MQTT Host</label>
+      <input id="mqtt_host" name="mqtt_host" maxlength="80" value=")HTML";
+  html += fMqttHost;
+  html += R"HTML(">
+
+      <label for="mqtt_port">MQTT Port</label>
+      <input id="mqtt_port" name="mqtt_port" type="number" min="1" max="65535" value=")HTML";
+  html += String(runtimeMqttPort);
+  html += R"HTML(">
+
+      <label for="mqtt_user">MQTT Username</label>
+      <input id="mqtt_user" name="mqtt_user" maxlength="63" value=")HTML";
+  html += fMqttUser;
+  html += R"HTML(">
+
+      <label for="mqtt_pass">MQTT Password</label>
+      <input id="mqtt_pass" name="mqtt_pass" type="password" maxlength="63" value=")HTML";
+  html += fMqttPass;
+  html += R"HTML(">
+
+      <label for="mqtt_cid">MQTT Client ID</label>
+      <input id="mqtt_cid" name="mqtt_cid" maxlength="40" value=")HTML";
+  html += fMqttCid;
+  html += R"HTML(">
+
+      <label for="mqtt_enabled">MQTT Enabled</label>
+      <input id="mqtt_enabled" name="mqtt_enabled" type="checkbox" )HTML";
+  if (fMqttEnabled) html += "checked";
+  html += R"HTML( style="width:auto; transform:scale(1.2);"> Enabled
+
+      <div class="row">
+        <button class="btn primary" type="submit">Save and Reboot</button>
+        <a class="btn ghost" href="/setup">Advanced</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>)HTML";
+  webServer.send(200, "text/html", html);
+}
+
 void startWifiSetupPortal() {
   // Reset WiFi stack before enabling AP to avoid silent AP-start failures.
   WiFi.disconnect(true, true);
@@ -2151,11 +2265,16 @@ bool hasProvisionedWiFiCredentials() {
 }
 
 void startMdnsService() {
-  if (WiFi.status() != WL_CONNECTED) return;
+  if (WiFi.status() != WL_CONNECTED) {
+    mdnsStarted = false;
+    return;
+  }
   if (MDNS.begin("bob")) {
     MDNS.addService("http", "tcp", 80);
+    mdnsStarted = true;
     Serial.println("mDNS started: http://bob.local");
   } else {
+    mdnsStarted = false;
     Serial.println("mDNS start failed");
   }
 }
@@ -2358,9 +2477,10 @@ void setup(){
 
   // Minimal HTTP endpoints (no control webapp).
   webServer.on("/", HTTP_GET, []() {
-    webServer.sendHeader("Location", "/setup");
-    webServer.send(302, "text/plain", "Redirecting to /setup");
+    webServer.sendHeader("Location", "/simple");
+    webServer.send(302, "text/plain", "Redirecting to /simple");
   });
+  webServer.on("/simple", HTTP_GET, handleSimpleSetupPage);
   webServer.on("/snapshot", handleCameraSnapshot);
   webServer.on("/setup", HTTP_GET, handleWifiSetupPage);
   webServer.on("/setup/save", HTTP_POST, handleWifiSetupSave);
@@ -2411,6 +2531,14 @@ void loop(){
 
   // Handle HTTP requests
   webServer.handleClient();
+
+  // Keep mDNS reachable on bob.local when STA reconnects later.
+  static uint32_t lastMdnsRetry = 0;
+  if (!mdnsStarted && WiFi.status() == WL_CONNECTED &&
+      (millis() - lastMdnsRetry) > 5000) {
+    lastMdnsRetry = millis();
+    startMdnsService();
+  }
 
   // Handle BLE WiFi provisioning requests.
   if (bleApplyRequested) {
