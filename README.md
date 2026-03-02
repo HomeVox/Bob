@@ -4,9 +4,8 @@
   <img src="https://github.com/HomeVox/Bob/blob/main/docs/images/bob-screen-2.png?raw=true" alt="Bob Screen" width="140" />
 </p>
 
-# BOB by HomeVox
-
-**Made by: HomeVox.nl**
+<h1 align="center">BOB by HomeVox</h1>
+<p align="center"><strong>Made by: <a href="https://homevox.nl" target="_blank" rel="noopener">HomeVox.nl</a></strong></p>
 
 BOB (Bad Or Brilliant) transforms your M5Stack CoreS3 into a premium Home Assistant companion with personality.  
 Instead of silent automations hidden in dashboards, BOB gives your smart home a face, a mood, and instant visual feedback.
@@ -25,15 +24,15 @@ BOB combines style and function in one device:
 - Home Assistant control via HACS + MQTT services
 - Practical sleep/wake behavior tuned for daily use
 
-## Why People Choose BOB
+## Why You Should Choose BOB
 
-Most smart-home setups are powerful but visually boring.  
-BOB turns your automations into something you can actually feel.
+Most smart-home setups are powerful, but they still feel impersonal.  
+BOB changes that by adding presence, emotion, and instant visual context to your automations.
 
-- See events immediately, no app switching needed
-- Trigger expressive reactions from scripts and automations
-- Personalize behavior to match your home’s vibe
-- Impress guests with a setup that feels truly alive
+- Instant feedback you can see across the room
+- More engaging automations that feel alive
+- Better household clarity for alerts and routines
+- A standout centerpiece for any Home Assistant setup
 
 ## Gallery
 
@@ -42,6 +41,7 @@ BOB turns your automations into something you can actually feel.
 ## Requirements
 
 - M5Stack CoreS3
+- 3D-printed housing/enclosure for Bob
 - Home Assistant
 - MQTT broker configured in Home Assistant
 - HACS installed
