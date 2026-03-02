@@ -29,6 +29,8 @@ from .const import (
     SERVICE_SET_MODE,
 )
 
+PLATFORMS = ["sensor"]
+
 
 SEND_TEXT_SCHEMA = vol.Schema(
     {
@@ -234,11 +236,16 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             DOMAIN, SERVICE_PROVISION_BLE, handle_provision_ble, schema=PROVISION_BLE_SCHEMA
         )
 
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload Bob config entry."""
+    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    if not unload_ok:
+        return False
+
     if DOMAIN in hass.data and entry.entry_id in hass.data[DOMAIN]:
         hass.data[DOMAIN].pop(entry.entry_id)
 
