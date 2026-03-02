@@ -4,9 +4,7 @@
 # BOB (Bad Or Brilliant)
 
 > BOB (Bad Or Brilliant) turns your M5Stack CoreS3 into a living smart companion with expressive eyes, emotional behavior, on-screen messages, and instant Home Assistant control. Install via HACS in minutes and bring automations to life with personality, motion, and real-time feedback right on Bob's face. It's either bad or brilliant.
-
-![BOB Hero](docs/images/hero-bob.png)
-
+`r`n
 
 ## Highlights
 
@@ -121,6 +119,7 @@ Actions:
 ## License
 
 MIT - see `LICENSE`.
+
 
 
 
