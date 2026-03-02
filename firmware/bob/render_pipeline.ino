@@ -5,7 +5,6 @@
 #include "mail_notify.xbm"
 #include "alarm_notify.xbm"
 #include "alarm_clock_notify.xbm"
-#include "washing_machine_notify.xbm"
 
 // ── Wit oogpalet ───────────────────────────────────────────────
 static const uint16_t EYE_DARK  = 0x39E7; // donkergrijs rand
@@ -482,11 +481,6 @@ static bool drawNotifyFullScreen() {
       uint16_t col = blink ? TFT_YELLOW : TFT_WHITE;
       drawXbm((const unsigned char*)alarm_clock_notify_bits,
               alarm_clock_notify_width, alarm_clock_notify_height, col);
-      break;
-    }
-    case EyeNotifyVisual::WashingMachine: {
-      drawXbm((const unsigned char*)washing_machine_notify_bits,
-              washing_machine_notify_width, washing_machine_notify_height, TFT_WHITE);
       break;
     }
     default:

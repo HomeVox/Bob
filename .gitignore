@@ -1,0 +1,15 @@
+﻿# OS / editor
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+
+# Build artifacts
+*.bin
+*.elf
+*.map
+
+# Local secrets override
+firmware/bob/config.local.h

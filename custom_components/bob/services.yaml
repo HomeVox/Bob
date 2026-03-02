@@ -1,4 +1,4 @@
-send_text:
+﻿send_text:
   name: Send text
   description: Send a text notification to Bob (and optionally wake/reaction options).
   fields:
@@ -10,7 +10,7 @@ send_text:
         text:
     type:
       name: Type
-      description: Notification type (generic, mail, alarm, washing_machine, etc.).
+      description: Notification type (generic, mail, alarm, etc.).
       required: false
       default: generic
       selector:
@@ -152,3 +152,4 @@ set_mode:
       required: false
       selector:
         text:
+

@@ -30,7 +30,6 @@ static bool isAllowedSoundKey(const String& soundKey) {
   static const char* kAllowed[] = {
     "doorbell",
     "mail",
-    "laundry_done",
     "warning",
     "alarm",
     "success",
@@ -103,10 +102,6 @@ static void handleNotifyCommand(const String& payload) {
       emotion = "Surprised";
     } else if (notifyType == "mail" || notifyType == "brief" || notifyType == "post") {
       emotion = "Thinking";
-    } else if (notifyType == "washing_machine" || notifyType == "wasmachine" ||
-               notifyType == "washing_machine_done" || notifyType == "wasmachine_klaar" ||
-               notifyType == "laundry_done") {
-      emotion = "Happy";
     } else if (notifyType == "welcome") {
       emotion = "Happy";
     } else if (notifyType == "focus") {
@@ -143,19 +138,11 @@ static void handleNotifyCommand(const String& payload) {
   } else if (notifyType == "alarm_clock" || notifyType == "wekker" || notifyType == "timer") {
     eyeNotifyVisual = EyeNotifyVisual::AlarmClock;
     eyeNotifyUntil = millis() + min(duration, (uint32_t)6000);
-  } else if (notifyType == "washing_machine" || notifyType == "wasmachine" ||
-             notifyType == "washing_machine_done" || notifyType == "wasmachine_klaar" ||
-             notifyType == "laundry_done") {
-    eyeNotifyVisual = EyeNotifyVisual::WashingMachine;
-    eyeNotifyUntil = millis() + min(duration, (uint32_t)5000);
   }
 
   if (sound.length() == 0) {
     if (notifyType == "doorbell" || notifyType == "bel" || notifyType == "deurbel") sound = "doorbell";
     else if (notifyType == "mail" || notifyType == "brief" || notifyType == "post") sound = "mail";
-    else if (notifyType == "washing_machine" || notifyType == "wasmachine" ||
-             notifyType == "washing_machine_done" || notifyType == "wasmachine_klaar" ||
-             notifyType == "laundry_done") sound = "laundry_done";
     else if (notifyType == "alarm") sound = "alarm";
     else if (notifyType == "warning") sound = "warning";
     else if (notifyType == "success") sound = "success";

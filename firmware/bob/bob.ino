@@ -511,7 +511,7 @@ float tiltOffsetR = 0.0f;
 float skewXL = 0.0f;
 float skewXR = 0.0f;
 
-enum class EyeNotifyVisual : uint8_t { None, Mail, Alarm, AlarmClock, WashingMachine };
+enum class EyeNotifyVisual : uint8_t { None, Mail, Alarm, AlarmClock };
 EyeNotifyVisual eyeNotifyVisual = EyeNotifyVisual::None;
 uint32_t eyeNotifyUntil = 0;
 float lidDropProgress = 0.0f; // 0.0 = open, 1.0 = gesloten (Sleepy emotie)
@@ -1171,10 +1171,6 @@ void triggerWebNotificationPreview(const String& rawType, const String& customTe
   } else if (t == "alarm_clock" || t == "wekker" || t == "timer") {
     p = PersonalityExtended::Excited; soundKey = "alarm";
     eyeNotifyVisual = EyeNotifyVisual::AlarmClock; visualMs = 4000;
-  } else if (t == "washing_machine" || t == "wasmachine" ||
-             t == "washing_machine_done" || t == "laundry_done") {
-    p = PersonalityExtended::Happy; soundKey = "laundry_done";
-    eyeNotifyVisual = EyeNotifyVisual::WashingMachine; visualMs = 3500;
   }
 
   if (eyeNotifyVisual != EyeNotifyVisual::None) {
