@@ -9,6 +9,7 @@ import voluptuous as vol
 
 from homeassistant.components import mqtt
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.exceptions import HomeAssistantError
 import homeassistant.helpers.config_validation as cv
@@ -19,6 +20,7 @@ from .const import (
     ACTIONS,
     CONF_COMMAND_PREFIX,
     CONF_NAME,
+    DATA_RUNTIME,
     DOMAIN,
     EMOTIONS,
     MODES,
@@ -27,6 +29,18 @@ from .const import (
     SERVICE_SEND_TEXT,
     SERVICE_SET_EMOTION,
     SERVICE_SET_MODE,
+)
+from .runtime import BobRuntime
+
+
+PLATFORMS: tuple[Platform, ...] = (
+    Platform.BINARY_SENSOR,
+    Platform.SENSOR,
+    Platform.SWITCH,
+    Platform.NUMBER,
+    Platform.BUTTON,
+    Platform.SELECT,
+    Platform.TEXT,
 )
 
 
@@ -174,9 +188,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     )
 
     hass.data.setdefault(DOMAIN, {})
+    runtime = BobRuntime(hass, entry)
+    await runtime.async_start()
     hass.data[DOMAIN][entry.entry_id] = {
         CONF_NAME: entry.data[CONF_NAME],
         CONF_COMMAND_PREFIX: entry.data[CONF_COMMAND_PREFIX],
+        DATA_RUNTIME: runtime,
     }
 
     if not hass.services.has_service(DOMAIN, SERVICE_SEND_TEXT):
@@ -234,12 +251,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             DOMAIN, SERVICE_PROVISION_BLE, handle_provision_ble, schema=PROVISION_BLE_SCHEMA
         )
 
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload Bob config entry."""
+    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    if not unload_ok:
+        return False
+
     if DOMAIN in hass.data and entry.entry_id in hass.data[DOMAIN]:
+        runtime = hass.data[DOMAIN][entry.entry_id].get(DATA_RUNTIME)
+        if runtime:
+            await runtime.async_stop()
         hass.data[DOMAIN].pop(entry.entry_id)
 
     if not hass.config_entries.async_entries(DOMAIN):

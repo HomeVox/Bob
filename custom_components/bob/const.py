@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 DOMAIN = "bob"
+DATA_RUNTIME = "runtime"
 
 CONF_COMMAND_PREFIX = "command_prefix"
 CONF_NAME = "name"
