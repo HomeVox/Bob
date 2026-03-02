@@ -1,4 +1,4 @@
-﻿// Bob - M5Stack CoreS3 Animated Eyes
+﻿// Bob - M5Stack CoreS3 Lite Animated Eyes
 #include <M5Unified.h>
 #include <M5CoreS3.h>
 #include <M5GFX.h>
@@ -3067,6 +3067,7 @@ void drawNotificationBar() {
   canvas.setTextDatum(MC_DATUM);
   canvas.drawString(text, w / 2, y + (barH / 2));
 }
+
 
 
 

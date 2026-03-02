@@ -6,7 +6,7 @@
 
 <h1 align="center">BOB by HomeVox</h1>
 
-BOB (Bad Or Brilliant) transforms your M5Stack CoreS3 into a premium Home Assistant companion with personality.  
+BOB (Bad Or Brilliant) transforms your M5Stack CoreS3 Lite into a premium Home Assistant companion with personality.  
 Instead of silent automations hidden in dashboards, BOB gives your smart home a face, a mood, and instant visual feedback.
 
 BOB is fully open source end to end: from 3D-printing your own shell to firmware code and Home Assistant integration.
@@ -52,7 +52,7 @@ BOB changes that by adding presence, emotion, and instant visual context to your
 
 ## Requirements
 
-- M5Stack CoreS3
+- M5Stack CoreS3 Lite
 - 3D-printed housing/enclosure for Bob
 - Home Assistant
 - MQTT broker configured in Home Assistant
@@ -174,12 +174,13 @@ www.homevox.nl
 ## Repository Structure
 
 - `custom_components/bob` - Home Assistant HACS integration
-- `firmware/bob` - M5Stack CoreS3 firmware
+- `firmware/bob` - M5Stack CoreS3 Lite firmware
 - `docs/images` - README image assets
 - `hacs.json` - HACS metadata
 
 ## License
 
 MIT - see `LICENSE`.
+
 
 
