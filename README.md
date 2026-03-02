@@ -1,7 +1,7 @@
 ﻿<p align="center">
   <img src="https://github.com/HomeVox/housekeeping-addon/blob/main/housekeeping/logo.png?raw=true" alt="HomeVox" width="220" />
   &nbsp;&nbsp;&nbsp;
-  <img src="https://github.com/HomeVox/Bob/blob/main/docs/images/bob-screen-2.png?raw=true" alt="Bob Screen" width="140" />
+  <a href="https://github.com/HomeVox/Bob/blob/main/docs/images/bob-screen-2.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/HomeVox/Bob/blob/main/docs/images/bob-screen-2.png?raw=true" alt="Bob Screen" width="140" /></a>
 </p>
 
 <h1 align="center">BOB by HomeVox</h1>
@@ -179,4 +179,5 @@ BOB will not only show what your smart home is doing, but also sound alive.
 ## License
 
 MIT - see `LICENSE`.
+
 
