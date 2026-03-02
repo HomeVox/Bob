@@ -14,7 +14,6 @@ from homeassistant.exceptions import HomeAssistantError
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers import device_registry as dr
 
-from .ble_provision import async_provision_over_ble
 from .const import (
     ACTIONS,
     CONF_COMMAND_PREFIX,
@@ -23,7 +22,6 @@ from .const import (
     EMOTIONS,
     MODES,
     SERVICE_RUN_ACTION,
-    SERVICE_PROVISION_BLE,
     SERVICE_SEND_TEXT,
     SERVICE_SET_EMOTION,
     SERVICE_SET_MODE,
@@ -63,22 +61,6 @@ SET_MODE_SCHEMA = vol.Schema(
         vol.Required("mode"): vol.In(MODES),
         vol.Required("enabled"): cv.boolean,
         vol.Optional("entry_id"): cv.string,
-    }
-)
-
-PROVISION_BLE_SCHEMA = vol.Schema(
-    {
-        vol.Required("ssid"): cv.string,
-        vol.Required("password"): cv.string,
-        vol.Optional("mqtt_host", default=""): cv.string,
-        vol.Optional("mqtt_port", default=1883): vol.All(vol.Coerce(int), vol.Range(min=1, max=65535)),
-        vol.Optional("mqtt_user", default=""): cv.string,
-        vol.Optional("mqtt_password", default=""): cv.string,
-        vol.Optional("mqtt_client_id", default="bob"): cv.string,
-        vol.Optional("mqtt_enabled", default=True): cv.boolean,
-        vol.Optional("ble_name", default="Bob-Setup-BLE"): cv.string,
-        vol.Optional("ble_address"): cv.string,
-        vol.Optional("timeout", default=20): vol.All(vol.Coerce(int), vol.Range(min=5, max=90)),
     }
 )
 
@@ -217,9 +199,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             topic, payload = _mode_to_topic_and_payload(prefix, call.data["mode"], call.data["enabled"])
             await _publish(hass, topic, payload)
 
-        async def handle_provision_ble(call: ServiceCall) -> None:
-            await async_provision_over_ble(call.data)
-
         hass.services.async_register(
             DOMAIN, SERVICE_SEND_TEXT, handle_send_text, schema=SEND_TEXT_SCHEMA
         )
@@ -231,9 +210,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         )
         hass.services.async_register(
             DOMAIN, SERVICE_SET_MODE, handle_set_mode, schema=SET_MODE_SCHEMA
-        )
-        hass.services.async_register(
-            DOMAIN, SERVICE_PROVISION_BLE, handle_provision_ble, schema=PROVISION_BLE_SCHEMA
         )
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
@@ -255,7 +231,6 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             SERVICE_SET_EMOTION,
             SERVICE_RUN_ACTION,
             SERVICE_SET_MODE,
-            SERVICE_PROVISION_BLE,
         ):
             if hass.services.has_service(DOMAIN, service_name):
                 hass.services.async_remove(DOMAIN, service_name)

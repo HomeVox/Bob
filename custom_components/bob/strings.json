@@ -3,44 +3,15 @@
     "step": {
       "user": {
         "title": "Bob",
-        "description": "Basic setup for Bob integration.",
+        "description": "Configure your Bob MQTT command prefix.",
         "data": {
           "name": "Name",
-          "command_prefix": "MQTT command prefix",
-          "provision_via_ble": "Provision WiFi/MQTT over BLE"
-        }
-      },
-      "ble_wifi": {
-        "title": "Bob BLE - WiFi",
-        "description": "Enter WiFi credentials and BLE connection settings.",
-        "data": {
-          "ssid": "WiFi SSID",
-          "password": "WiFi password",
-          "ble_name": "BLE device name",
-          "ble_address": "BLE address (optional)",
-          "timeout": "BLE scan timeout (seconds)"
-        }
-      },
-      "ble_mqtt": {
-        "title": "Bob BLE - MQTT",
-        "description": "Optional MQTT settings to send to Bob.",
-        "data": {
-          "mqtt_enabled": "Enable MQTT",
-          "mqtt_host": "MQTT host",
-          "mqtt_port": "MQTT port",
-          "mqtt_user": "MQTT username",
-          "mqtt_password": "MQTT password",
-          "mqtt_client_id": "MQTT client ID"
+          "command_prefix": "MQTT command prefix"
         }
       }
     },
     "abort": {
       "already_configured": "This Bob command prefix is already configured."
-    },
-    "error": {
-      "ssid_required": "SSID is required when BLE provisioning is enabled.",
-      "ble_provision_failed": "BLE provisioning failed. Ensure Bob is in setup mode and nearby.",
-      "unknown": "Unexpected error."
     }
   }
 }
