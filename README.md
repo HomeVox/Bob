@@ -47,6 +47,7 @@ BOB changes that by adding presence, emotion, and instant visual context to your
 
 ## Gallery
 
+![Bob Screen 2](docs/images/bob-screen-2.png)
 ![Bob Screen 5](docs/images/bob-screen-5.png)
 
 ## Requirements
