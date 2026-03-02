@@ -17,7 +17,6 @@
 ## Gallery
 
 ![Bob Screen 2](docs/images/bob-screen-2.png)
-![Bob Screen 4](docs/images/bob-screen-4.png)
 ![Bob Screen 5](docs/images/bob-screen-5.png)
 
 ## Requirements
@@ -117,6 +116,7 @@ Actions:
 ## License
 
 MIT - see `LICENSE`.
+
 
 
 
