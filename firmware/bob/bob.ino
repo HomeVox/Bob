@@ -1486,10 +1486,27 @@ void handleWifiSetupPage() {
       border: 1px solid var(--line);
       color: var(--text);
     }
+    .hero {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+    .hero img {
+      width: 140px;
+      max-width: 42%;
+      height: auto;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #0d1c2c;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    }
   </style>
 </head>
 <body>
   <div class="card">
+    <div class="hero"><img alt="Bob" src="data:image/jpeg;base64,)HTML";
+  html += BOB_IMAGE_B64;
+  html += R"HTML("></div>
     <h1>WiFi Setup</h1>
     <p>Enter your home network details. Bob saves them locally and restarts automatically.</p>
     <form method="POST" action="/setup/save">
