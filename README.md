@@ -1,17 +1,9 @@
-﻿<p align="center">
-  <img src="docs/images/homevox-logo.png" alt="HomeVox" width="220" />
-</p>
-
-# BOB (Bad Or Brilliant)
+﻿# BOB (Bad Or Brilliant)
 
 > BOB (Bad Or Brilliant) turns your M5Stack CoreS3 into a living smart companion with expressive eyes, emotional behavior, on-screen messages, and instant Home Assistant control. Install via HACS in minutes and bring automations to life with personality, motion, and real-time feedback right on Bob's face. It's either bad or brilliant.
 
 ![BOB Hero](docs/images/hero-bob.png)
 
-![HACS](https://img.shields.io/badge/HACS-Custom%20Integration-41BDF5?logo=homeassistant&logoColor=white)
-![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Ready-18BCF2?logo=homeassistant&logoColor=white)
-![MQTT](https://img.shields.io/badge/MQTT-Powered-660066?logo=mqtt&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green)
 
 ## Highlights
 
@@ -126,3 +118,4 @@ Actions:
 ## License
 
 MIT - see `LICENSE`.
+
