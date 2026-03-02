@@ -124,6 +124,11 @@ If Bob is in setup mode and not connected to your home WiFi yet:
 2. Open `http://192.168.4.1/setup`
 3. Save your WiFi + MQTT settings
 
+After Bob connects to your home network, you can open setup at:
+
+- `http://bob.local/setup`
+- or `http://<bob-ip>/setup`
+
 ## Home Assistant Services
 
 Domain: `bob`
