@@ -140,6 +140,16 @@ static void handleNotifyCommand(const String& payload) {
     eyeNotifyUntil = millis() + min(duration, (uint32_t)6000);
   }
 
+  uint16_t notifyColor = TFT_WHITE;
+  if (notifyType == "warning" || notifyType == "alarm" || notifyType == "alert" || notifyType == "error") {
+    notifyColor = TFT_RED;
+  } else if (notifyType == "success") {
+    notifyColor = TFT_GREEN;
+  } else if (notifyType == "mail" || notifyType == "brief" || notifyType == "post") {
+    notifyColor = TFT_CYAN;
+  }
+  showNotification(text, notifyColor, duration);
+
   if (sound.length() == 0) {
     if (notifyType == "doorbell" || notifyType == "bel" || notifyType == "deurbel") sound = "doorbell";
     else if (notifyType == "mail" || notifyType == "brief" || notifyType == "post") sound = "mail";
