@@ -1,20 +1,43 @@
-﻿<p align="center">
+<p align="center">
   <img src="https://github.com/HomeVox/housekeeping-addon/blob/main/housekeeping/logo.png?raw=true" alt="HomeVox" width="220" />
   &nbsp;&nbsp;&nbsp;
   <img src="https://github.com/HomeVox/Bob/blob/main/docs/images/bob-screen-2.png?raw=true" alt="Bob Screen" width="140" />
 </p>
 
-# BOB (Bad Or Brilliant)
-> BOB (Bad Or Brilliant) turns your M5Stack CoreS3 into a living smart companion with expressive eyes, emotional behavior, on-screen messages, and instant Home Assistant control. Install via HACS in minutes and bring automations to life with personality, motion, and real-time feedback right on Bob's face. It's either bad or brilliant.
+# BOB by HomeVox
 
+**Made by: HomeVox.nl**
 
-## Highlights
+BOB (Bad Or Brilliant) turns your M5Stack CoreS3 into a character-driven Home Assistant companion.  
+It reacts with expressive eyes, behavior-based emotions, and on-screen messages, so your automations feel alive instead of static.
 
-- Expressive eye engine with personality-driven behavior
-- On-screen text notifications
-- Modes: clock/screensaver, matrix, snow, celebrate
-- Home Assistant integration via HACS + MQTT
-- Built-in onboarding flow with QR install path
+BOB is designed for easy onboarding:
+- Scan the QR shown on Bob's screen
+- Install through HACS
+- Add the integration in Home Assistant
+- Start controlling Bob with simple services and MQTT actions
+
+It’s either bad or brilliant.
+
+## What BOB Does
+
+BOB combines visual personality with practical smart-home feedback:
+
+- Emotional eye engine with smooth transitions
+- Text notifications displayed directly on Bob’s screen
+- Screensaver/clock mode in Bob style
+- Matrix mode, snow mode, and celebration effects
+- Sleep/wake behavior tuned for real-world usage
+- Fast Home Assistant control through HACS integration
+
+## Why It’s Different
+
+Most smart-home feedback is hidden in apps and dashboards.  
+BOB gives your automations a physical face in your home:
+
+- You can *see* states and events instantly
+- You can *trigger* reactions from HA automations/scripts
+- You can *personalize* behavior and mood for your setup
 
 ## Gallery
 
@@ -23,49 +46,51 @@
 ## Requirements
 
 - M5Stack CoreS3
-- Home Assistant (with MQTT configured)
-- HACS installed in Home Assistant
+- Home Assistant
+- MQTT broker configured in Home Assistant
+- HACS installed
 
 ## Installation
 
-### 1. Install Through HACS
+### 1. Install Integration via HACS
 
 1. Open HACS in Home Assistant.
 2. Add this repository as a Custom Repository:
    - URL: `https://github.com/HomeVox/Bob`
-   - Type: `Integration`
+   - Category: `Integration`
 3. Install **Bob**.
 4. Restart Home Assistant.
 5. Add integration: `Settings -> Devices & Services -> Add Integration -> Bob`.
 
-### 2. Flash Bob Firmware
+### 2. Flash Firmware
 
 Firmware source:
 
 - `firmware/bob`
 
-Upload with your preferred Arduino/PlatformIO workflow.
+Build and flash with your preferred Arduino/PlatformIO flow.
 
 ### 3. Configure Firmware
 
 Use:
 
 - `firmware/bob/config.h`
-- `firmware/bob/config.example.h` (template)
+- `firmware/bob/config.example.h` as template
 
-Set at minimum:
+Set at least:
 
 - WiFi credentials
 - MQTT host/user/password
-- `BOB_HA_GITHUB_URL` (already set to this repo)
+- `BOB_HA_GITHUB_URL` (already points to this repository)
 
-## Quick Start
+## First Run Experience
 
-1. Boot Bob.
-2. Scan onboarding QR on Bob's screen.
-3. Install the HACS integration.
-4. Add Bob integration in Home Assistant.
-5. Start sending text and triggering actions.
+On boot, Bob can show a QR onboarding screen:
+
+- QR opens Bob’s local `/ha` onboarding page
+- That page links users straight to this GitHub repo/HACS flow
+
+This keeps setup simple for end users before deeper customization.
 
 ## Home Assistant Services
 
@@ -76,13 +101,49 @@ Domain: `bob`
 - `bob.run_action`
 - `bob.set_mode`
 
-Service schema:
+Service definitions:
 
 - `custom_components/bob/services.yaml`
 
-## Supported Modes and Actions
+## Service Examples
 
-Modes:
+### Send text
+
+```yaml
+service: bob.send_text
+data:
+  message: "Coffee is ready"
+  type: generic
+  duration: 4000
+  wake: true
+```
+
+### Set emotion
+
+```yaml
+service: bob.set_emotion
+data:
+  emotion: Happy
+```
+
+### Trigger action
+
+```yaml
+service: bob.run_action
+data:
+  action: celebrate
+```
+
+### Enable screensaver
+
+```yaml
+service: bob.set_mode
+data:
+  mode: screensaver
+  enabled: true
+```
+
+## Supported Modes
 
 - `matrix`
 - `snow`
@@ -95,7 +156,7 @@ Modes:
 - `proximity`
 - `auto_brightness`
 
-Actions:
+## Supported Actions
 
 - `wake`
 - `sleep`
@@ -108,21 +169,13 @@ Actions:
 - `yes`
 - `no`
 
-## Project Structure
+## Repository Structure
 
-- `custom_components/bob` - HACS integration
-- `firmware/bob` - CoreS3 firmware
+- `custom_components/bob` - Home Assistant HACS integration
+- `firmware/bob` - M5Stack CoreS3 firmware
+- `docs/images` - README image assets
 - `hacs.json` - HACS metadata
 
 ## License
 
 MIT - see `LICENSE`.
-
-
-
-
-
-
-
-
-
