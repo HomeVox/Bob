@@ -1,0 +1,17 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Bob",
+        "description": "Configure your Bob MQTT command prefix.",
+        "data": {
+          "name": "Name",
+          "command_prefix": "MQTT command prefix"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "This Bob command prefix is already configured."
+    }
+  }
+}

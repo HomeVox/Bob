@@ -1,0 +1,13 @@
+{
+  "domain": "bob",
+  "name": "Bob",
+  "version": "0.1.0",
+  "documentation": "https://github.com/HomeVox/Bob",
+  "issue_tracker": "https://github.com/HomeVox/Bob/issues",
+  "dependencies": [
+    "mqtt"
+  ],
+  "config_flow": true,
+  "iot_class": "local_push",
+  "codeowners": []
+}

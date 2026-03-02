@@ -1,0 +1,17 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Bob",
+        "description": "Configureer je Bob MQTT commando-prefix.",
+        "data": {
+          "name": "Naam",
+          "command_prefix": "MQTT commando-prefix"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Deze Bob commando-prefix is al geconfigureerd."
+    }
+  }
+}
