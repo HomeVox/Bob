@@ -100,19 +100,6 @@ Set at least in that service call:
 - WiFi SSID/password
 - MQTT host/user/password (and optional port/client ID)
 
-`BOB_HA_GITHUB_URL` can stay on this repository URL.
-
-## First Run Experience
-
-On first boot, BOB can show a QR onboarding screen to accelerate setup:
-
-- QR opens BOB’s local `/ha` onboarding page
-- That page links users directly to this GitHub + HACS flow
-
-Result: less friction, faster installation, better user experience.
-
-If you use BLE provisioning from Home Assistant, the QR onboarding screen is optional and can be disabled in firmware config.
-
 ## Home Assistant Services
 
 Domain: `bob`

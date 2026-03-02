@@ -16,12 +16,6 @@
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <BLEUtils.h>
-#if __has_include(<qrcode.h>)
-#include <qrcode.h>
-#define BOB_HAS_QRCODE 1
-#else
-#define BOB_HAS_QRCODE 0
-#endif
 #include "esp_camera.h"
 #include "img_converters.h"
 #include "config.h"
@@ -95,10 +89,8 @@ void handleWifiSetupSave();
 void handleDashboard();
 void handleControlAction();
 void handleApiStatus();
-void handleHaOnboarding();
 void startWifiSetupPortal();
 void drawSetupPortalScreen();
-void drawHaOnboardingScreen(const String& localHaUrl);
 void loadRuntimeConnectivityConfig();
 void startMdnsService();
 void triggerWebNotificationPreview(const String& rawType, const String& customText);
@@ -118,28 +110,6 @@ void publishWakeReason(const char* reason);
 void wakeBobFromSleep(const char* reason, bool triggerWakeSequence = true);
 extern String currentBehaviorName;
 extern uint32_t behaviorStartTime;
-
-#if BOB_HAS_QRCODE && defined(ESP_QRCODE_CONFIG_DEFAULT)
-static int g_haQrX0 = 10;
-static int g_haQrY0 = 52;
-static int g_haQrMaxSize = 148;
-
-static void drawHaOnboardingEspQr(esp_qrcode_handle_t qrcode) {
-  const int qrSize = esp_qrcode_get_size(qrcode);
-  int scale = 4;
-  while (scale > 1 && (qrSize * scale) > g_haQrMaxSize) scale--;
-
-  const int drawSize = qrSize * scale;
-  M5.Display.fillRect(g_haQrX0 - 2, g_haQrY0 - 2, drawSize + 4, drawSize + 4, TFT_WHITE);
-  for (int y = 0; y < qrSize; y++) {
-    for (int x = 0; x < qrSize; x++) {
-      if (esp_qrcode_get_module(qrcode, x, y)) {
-        M5.Display.fillRect(g_haQrX0 + x * scale, g_haQrY0 + y * scale, scale, scale, TFT_BLACK);
-      }
-    }
-  }
-}
-#endif
 
 // ---------------- Timings & constanten ----------------
 static const uint32_t FPS_DELAY_MS      = 16;   // ~60 FPS
@@ -2244,139 +2214,6 @@ void handleApiStatus() {
   webServer.send(200, "application/json", json);
 }
 
-void handleHaOnboarding() {
-  String html = R"HTML(
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bob naar Home Assistant</title>
-  <style>
-    :root { color-scheme: dark; }
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Tahoma, sans-serif;
-      background: #07131f;
-      color: #eaf5ff;
-      padding: 20px;
-    }
-    .wrap {
-      max-width: 760px;
-      margin: 0 auto;
-      background: #102235;
-      border: 1px solid #28425f;
-      border-radius: 14px;
-      padding: 20px;
-    }
-    h1 { margin-top: 0; font-size: 1.4rem; }
-    p, li { color: #c8d8e8; }
-    a.btn {
-      display: inline-block;
-      margin-top: 12px;
-      padding: 12px 16px;
-      border-radius: 10px;
-      text-decoration: none;
-      color: #07131f;
-      background: #7cd9ff;
-      font-weight: 600;
-    }
-    code { color: #9fe1ff; }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <h1>Bob Installation in Home Assistant</h1>
-    <p>Follow these 3 steps:</p>
-    <ol>
-      <li>Open Bob's GitHub page and install the integration via HACS.</li>
-      <li>Restart Home Assistant.</li>
-      <li>Add the <strong>Bob</strong> integration and keep MQTT on prefix <code>bob/cmd</code>.</li>
-    </ol>
-    <a class="btn" href=")HTML";
-  html += BOB_HA_GITHUB_URL;
-  html += R"HTML(" target="_blank" rel="noopener">Open Bob on GitHub</a>
-  </div>
-</body>
-</html>)HTML";
-  webServer.send(200, "text/html; charset=utf-8", html);
-}
-
-void drawHaOnboardingScreen(const String& localHaUrl) {
-  M5.Display.fillScreen(TFT_BLACK);
-  M5.Display.setTextColor(TFT_CYAN, TFT_BLACK);
-  M5.Display.setTextSize(2);
-  M5.Display.setCursor(10, 8);
-  M5.Display.println("Connect Bob to HA");
-
-  M5.Display.setTextColor(TFT_WHITE, TFT_BLACK);
-  M5.Display.setTextSize(1);
-  M5.Display.setCursor(10, 34);
-  M5.Display.println("Scan QR -> HACS install -> Add Integration");
-
-#if BOB_HAS_QRCODE
-  String qrPayload = localHaUrl;
-  if (qrPayload.length() == 0) {
-    qrPayload = String(BOB_HA_GITHUB_URL);
-  }
-
-  const int x0 = 10;
-  const int y0 = 52;
-#if defined(ESP_QRCODE_CONFIG_DEFAULT)
-  g_haQrX0 = x0;
-  g_haQrY0 = y0;
-  g_haQrMaxSize = 148;
-
-  esp_qrcode_config_t cfg = ESP_QRCODE_CONFIG_DEFAULT();
-  cfg.display_func = drawHaOnboardingEspQr;
-  cfg.max_qrcode_version = 5;
-  cfg.qrcode_ecc_level = ESP_QRCODE_ECC_LOW;
-  if (esp_qrcode_generate(&cfg, qrPayload.c_str()) != ESP_OK) {
-    M5.Display.setTextColor(TFT_ORANGE, TFT_BLACK);
-    M5.Display.setCursor(10, 68);
-    M5.Display.println("Failed to generate QR code.");
-  }
-#else
-  const uint8_t qrVersion = 5;
-  uint8_t qrcodeData[qrcode_getBufferSize(qrVersion)];
-  QRCode qrcode;
-  qrcode_initText(&qrcode, qrcodeData, qrVersion, ECC_LOW, qrPayload.c_str());
-
-  const int qrSize = qrcode.size;
-  int scale = 4;
-  while (scale > 1 && (qrSize * scale) > 148) scale--;
-  const int drawSize = qrSize * scale;
-
-  M5.Display.fillRect(x0 - 2, y0 - 2, drawSize + 4, drawSize + 4, TFT_WHITE);
-  for (int y = 0; y < qrSize; y++) {
-    for (int x = 0; x < qrSize; x++) {
-      if (qrcode_getModule(&qrcode, x, y)) {
-        M5.Display.fillRect(x0 + x * scale, y0 + y * scale, scale, scale, TFT_BLACK);
-      }
-    }
-  }
-#endif
-#else
-  M5.Display.setTextColor(TFT_ORANGE, TFT_BLACK);
-  M5.Display.setCursor(10, 68);
-  M5.Display.println("QR library is not available in this build.");
-#endif
-
-  M5.Display.setTextColor(TFT_WHITE, TFT_BLACK);
-  M5.Display.setCursor(176, 62);
-  M5.Display.println("1) Scan the QR");
-  M5.Display.setCursor(176, 82);
-  M5.Display.println("2) Open GitHub");
-  M5.Display.setCursor(176, 102);
-  M5.Display.println("3) Install via HACS");
-  M5.Display.setCursor(176, 122);
-  M5.Display.println("4) Add 'Bob' in HA");
-
-  M5.Display.setTextColor(TFT_DARKGREY, TFT_BLACK);
-  M5.Display.setCursor(10, 226);
-  M5.Display.println("Tap screen to skip");
-}
-
 // ==================== DEEP SLEEP FUNCTIONS ====================
 
 // Gracefully disconnect WiFi and MQTT before deep sleep
@@ -2518,39 +2355,18 @@ void setup(){
 
   // Minimal HTTP endpoints (no control webapp).
   webServer.on("/", HTTP_GET, []() {
-    webServer.sendHeader("Location", "/ha");
-    webServer.send(302, "text/plain", "Redirecting to /ha");
+    webServer.sendHeader("Location", "/setup");
+    webServer.send(302, "text/plain", "Redirecting to /setup");
   });
   webServer.on("/snapshot", handleCameraSnapshot);
   webServer.on("/setup", HTTP_GET, handleWifiSetupPage);
   webServer.on("/setup/save", HTTP_POST, handleWifiSetupSave);
-  webServer.on("/ha", HTTP_GET, handleHaOnboarding);
   webServer.begin();
   if (wifiSetupPortalActive) {
     Serial.printf("HTTP setup portal started on http://%s/\n", WiFi.softAPIP().toString().c_str());
   } else {
     Serial.printf("HTTP server started on http://%s/\n", WiFi.localIP().toString().c_str());
   }
-
-#if BOB_SHOW_HA_QR_ON_BOOT
-  if (!wifiSetupPortalActive && wifiEnabled) {
-    String localHaUrl = String("http://") + WiFi.localIP().toString() + "/ha";
-    drawHaOnboardingScreen(localHaUrl);
-    uint32_t onboardingStart = millis();
-    while ((uint32_t)(millis() - onboardingStart) < BOB_HA_ONBOARDING_MS) {
-      M5.update();
-      webServer.handleClient();
-      if (mqttEnabled && mqttClient.connected()) {
-        mqttClient.loop();
-      }
-      if (M5.Touch.isEnabled() && M5.Touch.getCount() > 0) {
-        break;
-      }
-      delay(20);
-    }
-    M5.Display.fillScreen(TFT_BLACK);
-  }
-#endif
 
   // Setup Home Assistant MQTT Discovery (optional)
   if (mqttEnabled && runtimeHaEnabled) {

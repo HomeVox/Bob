@@ -71,12 +71,4 @@
 #define MAX_LOOK_X_BASE      38.0f
 #define MAX_LOOK_Y_BASE      28.0f
 
-/******************************
- * Home Assistant onboarding (QR)
- ******************************/
-#define BOB_SHOW_HA_QR_ON_BOOT 0
-#define BOB_HA_ONBOARDING_MS 12000
-// Link shown on /ha page (set to your real GitHub repo URL).
-#define BOB_HA_GITHUB_URL "https://github.com/HomeVox/Bob"
-
 #endif // CONFIG_H
