@@ -3,22 +3,34 @@
     "step": {
       "user": {
         "title": "Bob",
-        "description": "Configureer Bob. Je kunt tijdens setup optioneel WiFi en MQTT via BLE provisionen.",
+        "description": "Basisinstellingen voor de Bob integratie.",
         "data": {
           "name": "Naam",
           "command_prefix": "MQTT commando-prefix",
-          "provision_via_ble": "Nu via BLE provisionen",
+          "provision_via_ble": "WiFi/MQTT via BLE provisionen"
+        }
+      },
+      "ble_wifi": {
+        "title": "Bob BLE - WiFi",
+        "description": "Vul WiFi-gegevens en BLE verbindingsinstellingen in.",
+        "data": {
           "ssid": "WiFi SSID",
           "password": "WiFi wachtwoord",
+          "ble_name": "BLE apparaatnaam",
+          "ble_address": "BLE adres (optioneel)",
+          "timeout": "BLE scan timeout (seconden)"
+        }
+      },
+      "ble_mqtt": {
+        "title": "Bob BLE - MQTT",
+        "description": "Optionele MQTT-instellingen om naar Bob te sturen.",
+        "data": {
+          "mqtt_enabled": "MQTT inschakelen",
           "mqtt_host": "MQTT host",
           "mqtt_port": "MQTT poort",
           "mqtt_user": "MQTT gebruikersnaam",
           "mqtt_password": "MQTT wachtwoord",
-          "mqtt_client_id": "MQTT client-ID",
-          "mqtt_enabled": "MQTT inschakelen",
-          "ble_name": "BLE apparaatnaam",
-          "ble_address": "BLE adres (optioneel)",
-          "timeout": "BLE scan timeout (seconden)"
+          "mqtt_client_id": "MQTT client-ID"
         }
       }
     },

@@ -3,22 +3,34 @@
     "step": {
       "user": {
         "title": "Bob",
-        "description": "Configure Bob. Optionally provision WiFi and MQTT over BLE during setup.",
+        "description": "Basic setup for Bob integration.",
         "data": {
           "name": "Name",
           "command_prefix": "MQTT command prefix",
-          "provision_via_ble": "Provision via BLE now",
+          "provision_via_ble": "Provision WiFi/MQTT over BLE"
+        }
+      },
+      "ble_wifi": {
+        "title": "Bob BLE - WiFi",
+        "description": "Enter WiFi credentials and BLE connection settings.",
+        "data": {
           "ssid": "WiFi SSID",
           "password": "WiFi password",
+          "ble_name": "BLE device name",
+          "ble_address": "BLE address (optional)",
+          "timeout": "BLE scan timeout (seconds)"
+        }
+      },
+      "ble_mqtt": {
+        "title": "Bob BLE - MQTT",
+        "description": "Optional MQTT settings to send to Bob.",
+        "data": {
+          "mqtt_enabled": "Enable MQTT",
           "mqtt_host": "MQTT host",
           "mqtt_port": "MQTT port",
           "mqtt_user": "MQTT username",
           "mqtt_password": "MQTT password",
-          "mqtt_client_id": "MQTT client ID",
-          "mqtt_enabled": "Enable MQTT",
-          "ble_name": "BLE device name",
-          "ble_address": "BLE address (optional)",
-          "timeout": "BLE scan timeout (seconds)"
+          "mqtt_client_id": "MQTT client ID"
         }
       }
     },
