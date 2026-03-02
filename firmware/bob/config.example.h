@@ -5,16 +5,16 @@
 /******************************
  * WiFi
  ******************************/
-#define WIFI_SSID        "YOUR_WIFI_SSID"
-#define WIFI_PASSWORD    "YOUR_WIFI_PASSWORD"
+#define WIFI_SSID        ""
+#define WIFI_PASSWORD    ""
 
 /******************************
  * MQTT (Home Assistant broker)
  ******************************/
-#define MQTT_HOST        "192.168.1.10"
+#define MQTT_HOST        ""
 #define MQTT_PORT        1883
-#define MQTT_USERNAME    "mqtt_user"
-#define MQTT_PASSWORD    "mqtt_password"
+#define MQTT_USERNAME    ""
+#define MQTT_PASSWORD    ""
 #define MQTT_CLIENT_ID   "bob"
 
 #define TOPIC_STATUS     "bob/status"
@@ -74,7 +74,7 @@
 /******************************
  * Home Assistant onboarding (QR)
  ******************************/
-#define BOB_SHOW_HA_QR_ON_BOOT 1
+#define BOB_SHOW_HA_QR_ON_BOOT 0
 #define BOB_HA_ONBOARDING_MS 12000
 // Link shown on /ha page (set to your real GitHub repo URL).
 #define BOB_HA_GITHUB_URL "https://github.com/HomeVox/Bob"

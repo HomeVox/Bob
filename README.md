@@ -50,6 +50,15 @@ BOB changes that by adding presence, emotion, and instant visual context to your
 ![Bob Screen 2](docs/images/bob-screen-2.png)
 ![Bob Screen 5](docs/images/bob-screen-5.png)
 
+## Bambu Lab / MakerWorld
+
+Want to publish or use BOB as a printable model on Bambu Lab?  
+Use:
+
+- [Bambu Upload Kit](docs/BAMBU-LAB.md)
+- [Assembly Guide](docs/ASSEMBLY.md)
+- [Assembly PDF](docs/BAMBU-GUIDE.pdf)
+
 ## Requirements
 
 - M5Stack CoreS3 Lite
@@ -78,18 +87,20 @@ Firmware source:
 
 Build and flash with your preferred Arduino/PlatformIO workflow.
 
-### 3. Configure Firmware
+### 3. Configure via Home Assistant (BLE)
 
-Use:
+Firmware can boot with placeholder values in `config.h`.
+Provision real credentials from Home Assistant with BLE service:
 
-- `firmware/bob/config.h`
-- `firmware/bob/config.example.h` as template
+- `bob.provision_ble_wifi`
+- default Bob BLE setup name: `Bob-Setup-BLE`
 
-Set at least:
+Set at least in that service call:
 
-- WiFi credentials
-- MQTT host/user/password
-- `BOB_HA_GITHUB_URL` (already points to this repository)
+- WiFi SSID/password
+- MQTT host/user/password (and optional port/client ID)
+
+`BOB_HA_GITHUB_URL` can stay on this repository URL.
 
 ## First Run Experience
 
@@ -100,6 +111,8 @@ On first boot, BOB can show a QR onboarding screen to accelerate setup:
 
 Result: less friction, faster installation, better user experience.
 
+If you use BLE provisioning from Home Assistant, the QR onboarding screen is optional and can be disabled in firmware config.
+
 ## Home Assistant Services
 
 Domain: `bob`
@@ -108,6 +121,7 @@ Domain: `bob`
 - `bob.set_emotion`
 - `bob.run_action`
 - `bob.set_mode`
+- `bob.provision_ble_wifi`
 
 Service definitions:
 
@@ -149,6 +163,22 @@ service: bob.set_mode
 data:
   mode: screensaver
   enabled: true
+```
+
+### Provision WiFi and MQTT over BLE
+
+```yaml
+service: bob.provision_ble_wifi
+data:
+  ssid: "MyHomeWiFi"
+  password: "supersecret"
+  mqtt_host: "192.168.1.10"
+  mqtt_port: 1883
+  mqtt_user: "mqtt_user"
+  mqtt_password: "mqtt_pass"
+  mqtt_client_id: "bob"
+  mqtt_enabled: true
+  ble_name: "Bob-Setup-BLE"
 ```
 
 ## Modes and Actions, as One Experience

@@ -14,6 +14,7 @@ SERVICE_SEND_TEXT = "send_text"
 SERVICE_SET_EMOTION = "set_emotion"
 SERVICE_RUN_ACTION = "run_action"
 SERVICE_SET_MODE = "set_mode"
+SERVICE_PROVISION_BLE = "provision_ble_wifi"
 
 EMOTIONS = [
     "Neutral",
@@ -57,4 +58,3 @@ MODES = [
     "proximity",
     "auto_brightness",
 ]
-

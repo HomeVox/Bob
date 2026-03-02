@@ -380,6 +380,12 @@ static const char* BLE_PROV_SSID_UUID    = "7a6b0002-10f6-4a6a-b4a0-3f1c2d9e1000
 static const char* BLE_PROV_PASS_UUID    = "7a6b0003-10f6-4a6a-b4a0-3f1c2d9e1000";
 static const char* BLE_PROV_APPLY_UUID   = "7a6b0004-10f6-4a6a-b4a0-3f1c2d9e1000";
 static const char* BLE_PROV_STATUS_UUID  = "7a6b0005-10f6-4a6a-b4a0-3f1c2d9e1000";
+static const char* BLE_PROV_MQTT_HOST_UUID = "7a6b0006-10f6-4a6a-b4a0-3f1c2d9e1000";
+static const char* BLE_PROV_MQTT_PORT_UUID = "7a6b0007-10f6-4a6a-b4a0-3f1c2d9e1000";
+static const char* BLE_PROV_MQTT_USER_UUID = "7a6b0008-10f6-4a6a-b4a0-3f1c2d9e1000";
+static const char* BLE_PROV_MQTT_PASS_UUID = "7a6b0009-10f6-4a6a-b4a0-3f1c2d9e1000";
+static const char* BLE_PROV_MQTT_CID_UUID  = "7a6b000a-10f6-4a6a-b4a0-3f1c2d9e1000";
+static const char* BLE_PROV_MQTT_EN_UUID   = "7a6b000b-10f6-4a6a-b4a0-3f1c2d9e1000";
 
 BLEServer* bleProvServer = nullptr;
 BLEService* bleProvService = nullptr;
@@ -387,6 +393,12 @@ BLECharacteristic* bleProvStatusChar = nullptr;
 bool bleProvisioningActive = false;
 String blePendingSsid = "";
 String blePendingPassword = "";
+String blePendingMqttHost = "";
+String blePendingMqttPort = "";
+String blePendingMqttUser = "";
+String blePendingMqttPass = "";
+String blePendingMqttClientId = "";
+String blePendingMqttEnabled = "";
 bool bleApplyRequested = false;
 
 class BleSsidCallbacks : public BLECharacteristicCallbacks {
@@ -414,6 +426,49 @@ class BleApplyCallbacks : public BLECharacteristicCallbacks {
     if (cmd == "APPLY" || cmd == "SAVE") {
       bleApplyRequested = true;
     }
+  }
+};
+
+class BleMqttHostCallbacks : public BLECharacteristicCallbacks {
+  void onWrite(BLECharacteristic* pCharacteristic) override {
+    blePendingMqttHost = pCharacteristic->getValue();
+    blePendingMqttHost.trim();
+  }
+};
+
+class BleMqttPortCallbacks : public BLECharacteristicCallbacks {
+  void onWrite(BLECharacteristic* pCharacteristic) override {
+    blePendingMqttPort = pCharacteristic->getValue();
+    blePendingMqttPort.trim();
+  }
+};
+
+class BleMqttUserCallbacks : public BLECharacteristicCallbacks {
+  void onWrite(BLECharacteristic* pCharacteristic) override {
+    blePendingMqttUser = pCharacteristic->getValue();
+    blePendingMqttUser.trim();
+  }
+};
+
+class BleMqttPassCallbacks : public BLECharacteristicCallbacks {
+  void onWrite(BLECharacteristic* pCharacteristic) override {
+    blePendingMqttPass = pCharacteristic->getValue();
+    blePendingMqttPass.trim();
+  }
+};
+
+class BleMqttCidCallbacks : public BLECharacteristicCallbacks {
+  void onWrite(BLECharacteristic* pCharacteristic) override {
+    blePendingMqttClientId = pCharacteristic->getValue();
+    blePendingMqttClientId.trim();
+  }
+};
+
+class BleMqttEnabledCallbacks : public BLECharacteristicCallbacks {
+  void onWrite(BLECharacteristic* pCharacteristic) override {
+    blePendingMqttEnabled = pCharacteristic->getValue();
+    blePendingMqttEnabled.trim();
+    blePendingMqttEnabled.toUpperCase();
   }
 };
 
@@ -1727,6 +1782,30 @@ void startBleProvisioning() {
     BLE_PROV_APPLY_UUID,
     BLECharacteristic::PROPERTY_WRITE
   );
+  BLECharacteristic* mqttHostChar = bleProvService->createCharacteristic(
+    BLE_PROV_MQTT_HOST_UUID,
+    BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE
+  );
+  BLECharacteristic* mqttPortChar = bleProvService->createCharacteristic(
+    BLE_PROV_MQTT_PORT_UUID,
+    BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE
+  );
+  BLECharacteristic* mqttUserChar = bleProvService->createCharacteristic(
+    BLE_PROV_MQTT_USER_UUID,
+    BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE
+  );
+  BLECharacteristic* mqttPassChar = bleProvService->createCharacteristic(
+    BLE_PROV_MQTT_PASS_UUID,
+    BLECharacteristic::PROPERTY_WRITE
+  );
+  BLECharacteristic* mqttCidChar = bleProvService->createCharacteristic(
+    BLE_PROV_MQTT_CID_UUID,
+    BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE
+  );
+  BLECharacteristic* mqttEnabledChar = bleProvService->createCharacteristic(
+    BLE_PROV_MQTT_EN_UUID,
+    BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE
+  );
   bleProvStatusChar = bleProvService->createCharacteristic(
     BLE_PROV_STATUS_UUID,
     BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY
@@ -1735,8 +1814,19 @@ void startBleProvisioning() {
   ssidChar->setCallbacks(new BleSsidCallbacks());
   passChar->setCallbacks(new BlePasswordCallbacks());
   applyChar->setCallbacks(new BleApplyCallbacks());
+  mqttHostChar->setCallbacks(new BleMqttHostCallbacks());
+  mqttPortChar->setCallbacks(new BleMqttPortCallbacks());
+  mqttUserChar->setCallbacks(new BleMqttUserCallbacks());
+  mqttPassChar->setCallbacks(new BleMqttPassCallbacks());
+  mqttCidChar->setCallbacks(new BleMqttCidCallbacks());
+  mqttEnabledChar->setCallbacks(new BleMqttEnabledCallbacks());
 
   ssidChar->setValue("");
+  mqttHostChar->setValue(String(runtimeMqttHost).c_str());
+  mqttPortChar->setValue(String(runtimeMqttPort).c_str());
+  mqttUserChar->setValue(String(runtimeMqttUser).c_str());
+  mqttCidChar->setValue(String(runtimeMqttClientId).c_str());
+  mqttEnabledChar->setValue(runtimeMqttEnabled ? "1" : "0");
   bleProvStatusChar->setValue("READY");
 
   bleProvService->start();
@@ -2507,10 +2597,40 @@ void loop(){
   if (bleApplyRequested) {
     bleApplyRequested = false;
     blePendingSsid.trim();
-    if (blePendingSsid.length() > 0 && blePendingSsid.length() <= 63 && blePendingPassword.length() <= 63) {
+    blePendingPassword.trim();
+    blePendingMqttHost.trim();
+    blePendingMqttPort.trim();
+    blePendingMqttUser.trim();
+    blePendingMqttPass.trim();
+    blePendingMqttClientId.trim();
+    blePendingMqttEnabled.trim();
+    blePendingMqttEnabled.toUpperCase();
+
+    uint32_t mqttPort = blePendingMqttPort.toInt();
+    if (mqttPort == 0) mqttPort = MQTT_PORT;
+
+    bool mqttEnabledOpt = runtimeMqttEnabled;
+    if (blePendingMqttEnabled == "1" || blePendingMqttEnabled == "ON" ||
+        blePendingMqttEnabled == "TRUE" || blePendingMqttEnabled == "YES") {
+      mqttEnabledOpt = true;
+    } else if (blePendingMqttEnabled == "0" || blePendingMqttEnabled == "OFF" ||
+               blePendingMqttEnabled == "FALSE" || blePendingMqttEnabled == "NO") {
+      mqttEnabledOpt = false;
+    }
+
+    if (blePendingSsid.length() > 0 && blePendingSsid.length() <= 63 && blePendingPassword.length() <= 63 &&
+        blePendingMqttHost.length() <= 80 && blePendingMqttUser.length() <= 63 &&
+        blePendingMqttPass.length() <= 63 && blePendingMqttClientId.length() <= 40 &&
+        mqttPort <= 65535) {
       wifiPrefs.begin("wifi", false);
       wifiPrefs.putString("ssid", blePendingSsid);
       wifiPrefs.putString("password", blePendingPassword);
+      if (blePendingMqttHost.length() > 0) wifiPrefs.putString("mqtt_host", blePendingMqttHost);
+      wifiPrefs.putUInt("mqtt_port", mqttPort);
+      wifiPrefs.putString("mqtt_user", blePendingMqttUser);
+      wifiPrefs.putString("mqtt_pass", blePendingMqttPass);
+      if (blePendingMqttClientId.length() > 0) wifiPrefs.putString("mqtt_cid", blePendingMqttClientId);
+      wifiPrefs.putBool("mqtt_enabled", mqttEnabledOpt);
       wifiPrefs.end();
       if (bleProvStatusChar) {
         bleProvStatusChar->setValue("SAVED");
