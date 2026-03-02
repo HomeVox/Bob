@@ -118,6 +118,12 @@ Set at least in that service call:
 - WiFi SSID/password
 - MQTT host/user/password (and optional port/client ID)
 
+If Bob is in setup mode and not connected to your home WiFi yet:
+
+1. Connect your phone/laptop to WiFi network `Bob-Setup`
+2. Open `http://192.168.4.1/setup`
+3. Save your WiFi + MQTT settings
+
 ## Home Assistant Services
 
 Domain: `bob`
