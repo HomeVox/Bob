@@ -2322,11 +2322,13 @@ void setup(){
       startBleProvisioning();
     } else {
       stopBleProvisioning();
-      // NTP tijdsynchronisatie (Nederland: CET/CEST)
+      // NTP time sync. Timezone configurable via BOB_TIMEZONE in config.h.
       configTime(0, 0, "pool.ntp.org", "time.nist.gov");
-      setenv("TZ", "CET-1CEST,M3.5.0,M10.5.0/3", 1);
+      setenv("TZ", BOB_TIMEZONE, 1);
       tzset();
-      Serial.println("NTP time sync gestart (CET/CEST)");
+      Serial.print("NTP time sync started (TZ=");
+      Serial.print(BOB_TIMEZONE);
+      Serial.println(")");
     }
   }
 

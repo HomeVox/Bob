@@ -53,6 +53,21 @@
 #define DEFAULT_SCREEN_BRIGHTNESS 60
 #define DEFAULT_PROXIMITY_THRESHOLD 255
 
+// Timezone (POSIX TZ string). Used by NTP time sync at boot.
+// Examples:
+//   Central EU:  "CET-1CEST,M3.5.0,M10.5.0/3"  (default)
+//   UK:          "GMT0BST,M3.5.0/1,M10.5.0"
+//   US Eastern:  "EST5EDT,M3.2.0,M11.1.0"
+//   US Central:  "CST6CDT,M3.2.0,M11.1.0"
+//   US Mountain: "MST7MDT,M3.2.0,M11.1.0"
+//   US Pacific:  "PST8PDT,M3.2.0,M11.1.0"
+//   UTC:         "UTC0"
+#define BOB_TIMEZONE "CET-1CEST,M3.5.0,M10.5.0/3"
+
+// Clock screensaver display format. 1 = 24-hour (00-23), 0 = 12-hour (1-12).
+// 12-hour mode shows 1-12 only; no AM/PM indicator (BOB has no space for it).
+#define BOB_CLOCK_24H 1
+
 #define SENSOR_PUBLISH_INTERVAL_MS 500
 #define STATUS_PUBLISH_INTERVAL_MS 10000
 #define MQTT_RECONNECT_INTERVAL_MS 5000

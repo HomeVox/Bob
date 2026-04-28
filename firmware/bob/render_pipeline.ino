@@ -546,6 +546,11 @@ static void drawClockModeScreen(float lookX, float lookY) {
   }
   int hh = tmNow.tm_hour;
   int mm = tmNow.tm_min;
+#if !BOB_CLOCK_24H
+  // 12-hour mode: convert 0-23 to 1-12 (no AM/PM indicator).
+  hh = hh % 12;
+  if (hh == 0) hh = 12;
+#endif
 
   // Vaste klok-layout: duidelijk grotere ogen, geen beweging.
   EyeDims eye = computeEyeDims(neutralShape, 1.2f);
