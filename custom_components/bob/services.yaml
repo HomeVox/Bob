@@ -1,0 +1,226 @@
+﻿send_text:
+  name: Send text
+  description: Send a text notification to Bob (and optionally wake/reaction options).
+  fields:
+    message:
+      name: Message
+      description: Text to show on Bob's screen.
+      required: true
+      selector:
+        text:
+    type:
+      name: Type
+      description: Notification type (generic, mail, alarm, etc.).
+      required: false
+      default: generic
+      selector:
+        text:
+    duration:
+      name: Duration
+      description: Display duration in milliseconds.
+      required: false
+      default: 4000
+      selector:
+        number:
+          min: 1000
+          max: 20000
+          mode: box
+    wake:
+      name: Wake
+      description: Wake Bob before showing the text.
+      required: false
+      default: true
+      selector:
+        boolean:
+    emotion:
+      name: Emotion
+      description: Optional emotion override.
+      required: false
+      selector:
+        select:
+          options:
+            - Neutral
+            - Happy
+            - Sad
+            - Thinking
+            - Excited
+            - Confused
+            - Angry
+            - Scared
+            - Sleepy
+            - Love
+            - Surprised
+            - Dizzy
+            - Bored
+            - Random
+    sound:
+      name: Sound
+      description: Optional Bob sound key (mail, alarm, warning, success, etc.).
+      required: false
+      selector:
+        text:
+    entry_id:
+      name: Entry ID
+      description: Optional target Bob config entry.
+      required: false
+      selector:
+        text:
+
+set_emotion:
+  name: Set emotion
+  description: Set Bob's current emotion.
+  fields:
+    emotion:
+      name: Emotion
+      required: true
+      selector:
+        select:
+          options:
+            - Neutral
+            - Happy
+            - Sad
+            - Thinking
+            - Excited
+            - Confused
+            - Angry
+            - Scared
+            - Sleepy
+            - Love
+            - Surprised
+            - Dizzy
+            - Bored
+            - Random
+    entry_id:
+      name: Entry ID
+      required: false
+      selector:
+        text:
+
+run_action:
+  name: Run action
+  description: Trigger a high-level Bob action.
+  fields:
+    action:
+      name: Action
+      required: true
+      selector:
+        select:
+          options:
+            - wake
+            - sleep
+            - blink
+            - follow
+            - curious
+            - wakeup_sequence
+            - celebrate
+            - snapshot
+            - yes
+            - no
+    entry_id:
+      name: Entry ID
+      required: false
+      selector:
+        text:
+
+set_mode:
+  name: Set mode
+  description: Enable or disable a Bob mode.
+  fields:
+    mode:
+      name: Mode
+      required: true
+      selector:
+        select:
+          options:
+            - matrix
+            - snow
+            - cannons
+            - screensaver
+            - clock
+            - tracking
+            - camera_stream
+            - auto_emotion
+            - proximity
+            - auto_brightness
+    enabled:
+      name: Enabled
+      required: true
+      selector:
+        boolean:
+    entry_id:
+      name: Entry ID
+      required: false
+      selector:
+        text:
+
+provision_ble_wifi:
+  name: Provision via BLE
+  description: Send WiFi and MQTT settings to Bob over BLE setup service and apply immediately.
+  fields:
+    ssid:
+      name: WiFi SSID
+      required: true
+      selector:
+        text:
+    password:
+      name: WiFi Password
+      required: true
+      selector:
+        text:
+    mqtt_host:
+      name: MQTT Host
+      required: false
+      selector:
+        text:
+    mqtt_port:
+      name: MQTT Port
+      required: false
+      default: 1883
+      selector:
+        number:
+          min: 1
+          max: 65535
+          mode: box
+    mqtt_user:
+      name: MQTT Username
+      required: false
+      selector:
+        text:
+    mqtt_password:
+      name: MQTT Password
+      required: false
+      selector:
+        text:
+    mqtt_client_id:
+      name: MQTT Client ID
+      required: false
+      default: bob
+      selector:
+        text:
+    mqtt_enabled:
+      name: MQTT Enabled
+      required: false
+      default: true
+      selector:
+        boolean:
+    ble_name:
+      name: BLE Name
+      required: false
+      default: Bob-Setup-BLE
+      selector:
+        text:
+    ble_address:
+      name: BLE Address
+      required: false
+      selector:
+        text:
+    timeout:
+      name: Scan timeout (sec)
+      required: false
+      default: 20
+      selector:
+        number:
+          min: 5
+          max: 90
+          mode: box
+
